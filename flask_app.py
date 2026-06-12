@@ -425,7 +425,7 @@ _MAIN_HTML = """<!DOCTYPE html>
       <span style="font-size:1.3rem">✨</span>
       <div>
         <div style="font-weight:800;font-size:14px;color:#e0e2ef">VeriSphere AI</div>
-        <div style="font-size:10px;color:#8083ff;font-weight:600">Powered by Gemini 1.5 Flash</div>
+        <div style="font-size:10px;color:#8083ff;font-weight:600">AI Assistant</div>
       </div>
     </div>
     <button onclick="toggleChat()" style="background:none;border:none;color:#9ca3af;cursor:pointer;font-size:18px;line-height:1">✕</button>
@@ -490,7 +490,7 @@ async function sendChat() {
     document.getElementById(typingId)?.remove();
 
     const reply = data.reply || data.error || 'Something went wrong.';
-    const modelTag = data.model ? `<span style="font-size:9px;color:#8083ff;font-weight:700;display:block;margin-bottom:4px">✨ ${data.model}</span>` : '';
+    const modelTag = data.model ? `` : '';
     msgs.innerHTML += `
       <div style="background:rgba(128,131,255,0.08);border-radius:12px 12px 12px 4px;padding:10px 14px;max-width:85%">
         ${modelTag}

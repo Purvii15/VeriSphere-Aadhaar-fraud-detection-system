@@ -27,6 +27,19 @@ analytics.db
 # Dataset (large)
 aadhaar_dataset/
 roboflow_dataset/
+train/
+valid/
+runs/
+pan_dataset.zip
+*.rar
+data.yaml
+README.dataset.txt
+README.roboflow.txt
+
+# Model weights (large)
+yolov8n.pt
+yolov8m.pt
+yolo11m.pt
 
 # EasyOCR cache
 .EasyOCR/
