@@ -215,7 +215,7 @@ _MAIN_HTML = """<!DOCTYPE html>
 <aside class="bg-[#181b25] dark:bg-[#181b25] h-full w-64 border-r border-white/[0.06] flex flex-col py-8 hidden lg:flex" style="flex-shrink:0;overflow-y:auto;">
 <div class="px-6 mb-8">
 <div class="text-lg font-black text-[#8083ff] tracking-tighter">VeriSphere</div>
-<div class="text-[10px] text-[#c7c4d7] uppercase tracking-widest font-bold opacity-60 mt-1">Aadhaar Verification</div>
+<div class="text-[10px] text-[#c7c4d7] uppercase tracking-widest font-bold opacity-60 mt-1">Aadhaar Fraud Detection</div>
 </div>
 <nav class="flex-1">
 <div class="bg-gradient-to-r from-[#8083ff]/10 to-transparent text-[#8083ff] border-l-4 border-[#8083ff] px-6 py-3 flex items-center gap-3 font-['Inter'] text-sm font-medium tracking-wide">
@@ -248,7 +248,7 @@ _MAIN_HTML = """<!DOCTYPE html>
                     New Analysis
                 </button>
 <button onclick="toggleChat()" class="w-full mt-3 border border-[#8083ff]/40 text-[#8083ff] font-bold py-3 rounded-xl active:scale-95 transition-all hover:bg-[#8083ff]/10 cursor-pointer text-sm">
-                    ✨ Ask Gemini AI
+                    ✨ Ask AI Assistant
                 </button>
 </div>
 </aside>
@@ -1613,7 +1613,7 @@ footer{border-top:1px solid var(--border);padding:40px;text-align:center;color:v
       <div class="pipe-num">1</div>
       <div class="pipe-content">
         <h3>YOLOv8 Field Detection</h3>
-        <p>Computer vision model locates and crops every field on the document — name, DOB, ID number, face photo, and QR code — with bounding box annotations.</p>
+        <p>Computer vision model locates and crops every field on the document — name, DOB, ID number, face photo, and QR code — with bounding box annotations. Catches missing fields, wrong layouts, and documents that aren't genuine Aadhaar cards before any other check runs.</p>
       </div>
     </div>
     <div class="pipe-step">
@@ -1643,6 +1643,67 @@ footer{border-top:1px solid var(--border);padding:40px;text-align:center;color:v
         <h3>Digital Forensics</h3>
         <p>Error Level Analysis, noise uniformity checks, and sharpness consistency analysis detect pixel-level manipulation, copy-paste forgery, and screenshot-based fakes.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- QR DEEP DIVE -->
+<section style="padding-top:0">
+  <div class="section-tag">QR Intelligence</div>
+  <h2 class="section-title">What the QR cross-check actually does</h2>
+  <p class="section-sub">Every post-2018 Aadhaar card has a QR code containing encrypted personal data signed by UIDAI. VeriSphere decodes it and cross-validates field by field.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔓</div>
+      <h3>Two QR Formats Supported</h3>
+      <p><strong>Old format (pre-2018):</strong> XML-based, contains full UID, name, DOB, gender, address.<br/><br/><strong>Secure format (post-2018):</strong> Binary with 0xFF delimiters — auto-detected and decoded.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>Field-by-Field Comparison</h3>
+      <p>Every field from the QR — name, DOB, gender, UID last 4 digits, address — is compared against what OCR read from the printed card. Any mismatch is flagged with the exact field and values.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📸</div>
+      <h3>Embedded Photo Extraction</h3>
+      <p>eAadhaar digital cards embed a JPEG2000 photo inside the QR. VeriSphere extracts it, runs Haar cascade face alignment, and compares it against the card face using SSIM — directly catching photo-swap fraud.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚠️</div>
+      <h3>What It Catches</h3>
+      <p>• Printed name ≠ QR name (forged card with real person's QR)<br/>• DOB altered on printout<br/>• UID number doesn't match QR reference<br/>• Photo replaced but QR kept original<br/>• Fake QR that won't decode at all</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT WE CATCH -->
+<section style="padding-top:0">
+  <div class="section-tag">Fraud Signals</div>
+  <h2 class="section-title">Every mistake a forger makes, flagged</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;">
+    <div style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:20px;">
+      <div style="font-size:11px;font-weight:800;color:#f87171;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">❌ Fabricated Number</div>
+      <p style="font-size:13px;color:var(--muted);">Aadhaar number fails Verhoeff checksum. No real UID can produce a random 12-digit sequence that passes this algorithm.</p>
+    </div>
+    <div style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:20px;">
+      <div style="font-size:11px;font-weight:800;color:#f87171;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">❌ Name Mismatch</div>
+      <p style="font-size:13px;color:var(--muted);">Name printed on the card doesn't match the name stored inside the QR code. Classic sign of a card printed over someone else's QR.</p>
+    </div>
+    <div style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:20px;">
+      <div style="font-size:11px;font-weight:800;color:#f87171;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">❌ Photo Swap</div>
+      <p style="font-size:13px;color:var(--muted);">Face on the card doesn't match the photo embedded in the QR. SSIM score below 0.50 triggers an instant Fake verdict.</p>
+    </div>
+    <div style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:20px;">
+      <div style="font-size:11px;font-weight:800;color:#f87171;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">❌ Pixel Tampering</div>
+      <p style="font-size:13px;color:var(--muted);">ELA detects regions where image compression artifacts differ from the rest — exactly where text or photo was edited using Photoshop or similar tools.</p>
+    </div>
+    <div style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:20px;">
+      <div style="font-size:11px;font-weight:800;color:#f87171;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">❌ Screenshot Fake</div>
+      <p style="font-size:13px;color:var(--muted);">Sharpness inconsistency across regions reveals screenshots printed or displayed as physical cards — noise pattern is uniform instead of varying naturally.</p>
+    </div>
+    <div style="background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2);border-radius:12px;padding:20px;">
+      <div style="font-size:11px;font-weight:800;color:#f87171;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">❌ No QR Detected</div>
+      <p style="font-size:13px;color:var(--muted);">All post-2018 Aadhaar cards have a QR code. Its absence is itself a strong fraud signal — flagged as Suspicious automatically.</p>
     </div>
   </div>
 </section>
