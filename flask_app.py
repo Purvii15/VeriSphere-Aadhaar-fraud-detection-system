@@ -196,6 +196,7 @@ _MAIN_HTML = """<!DOCTYPE html>
 <div class="hidden md:flex items-center gap-8">
 <a class="text-[#8083ff] border-b-2 border-[#8083ff] pb-1 text-sm font-medium" href="#">Dashboard</a>
 <a class="text-[#c7c4d7] hover:text-[#8083ff] transition-colors text-sm font-medium" href="/qr-decode">QR Decode</a>
+<a class="text-[#c7c4d7] hover:text-[#8083ff] transition-colors text-sm font-medium" href="/landing">About</a>
 <a class="text-[#c7c4d7] hover:text-[#8083ff] transition-colors text-sm font-medium" href="#" data-soon>Forensics</a>
 <a class="text-[#c7c4d7] hover:text-[#8083ff] transition-colors text-sm font-medium" href="#" data-soon>Archive</a>
 <a class="text-[#c7c4d7] hover:text-[#8083ff] transition-colors text-sm font-medium" href="#" data-soon>Network</a>
@@ -1465,6 +1466,294 @@ def chat():
         return jsonify({"reply": reply, "model": "Llama 3.2 (HF Free)"})
     except Exception as e:
         return jsonify({"error": f"Both Gemini and Gemma failed: {e}"}), 500
+
+
+_LANDING_HTML = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VeriSphere — AI Document Fraud Detection</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#07090f;--card:#0e1117;--border:rgba(255,255,255,0.07);--purple:#8083ff;--purple2:#571bc1;--text:#e0e2ef;--muted:#9ca3af;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.6;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;backdrop-filter:blur(20px);background:rgba(7,9,15,0.8);border-bottom:1px solid var(--border);padding:0 40px;height:64px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-weight:900;font-size:20px;background:linear-gradient(to right,var(--purple),var(--purple2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-links{display:flex;gap:32px;align-items:center;}
+.nav-links a{font-size:14px;font-weight:500;color:var(--muted);transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{background:linear-gradient(to right,var(--purple),var(--purple2));color:#fff!important;padding:8px 20px;border-radius:8px;font-weight:700!important;transition:opacity 0.2s!important;}
+.nav-cta:hover{opacity:0.85;}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;position:relative;overflow:hidden;}
+.hero-glow{position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(128,131,255,0.12) 0%,transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(128,131,255,0.1);border:1px solid rgba(128,131,255,0.25);border-radius:999px;padding:6px 16px;font-size:12px;font-weight:700;color:var(--purple);margin-bottom:28px;letter-spacing:0.05em;}
+.hero h1{font-size:clamp(36px,6vw,72px);font-weight:900;line-height:1.1;max-width:900px;margin-bottom:24px;}
+.hero h1 span{background:linear-gradient(to right,var(--purple),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero-sub{font-size:clamp(16px,2vw,20px);color:var(--muted);max-width:600px;margin-bottom:48px;font-weight:400;}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+.btn-primary{background:linear-gradient(to right,var(--purple),var(--purple2));color:#fff;padding:14px 32px;border-radius:10px;font-weight:700;font-size:15px;transition:opacity 0.2s;box-shadow:0 0 30px rgba(128,131,255,0.3);}
+.btn-primary:hover{opacity:0.85;}
+.btn-secondary{border:1px solid var(--border);color:var(--text);padding:14px 32px;border-radius:10px;font-weight:600;font-size:15px;transition:all 0.2s;background:rgba(255,255,255,0.03);}
+.btn-secondary:hover{border-color:var(--purple);color:var(--purple);}
+
+/* STATS */
+.stats{display:flex;justify-content:center;gap:0;flex-wrap:wrap;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:0;background:var(--card);}
+.stat{flex:1;min-width:160px;padding:32px 24px;text-align:center;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat-num{font-size:36px;font-weight:900;background:linear-gradient(to right,var(--purple),#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-label{font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-top:4px;}
+
+/* SECTIONS */
+section{padding:96px 24px;max-width:1100px;margin:0 auto;}
+.section-tag{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.12em;color:var(--purple);margin-bottom:12px;}
+.section-title{font-size:clamp(28px,4vw,44px);font-weight:900;line-height:1.15;margin-bottom:16px;}
+.section-sub{font-size:16px;color:var(--muted);max-width:560px;margin-bottom:56px;}
+
+/* PIPELINE */
+.pipeline{display:flex;flex-direction:column;gap:0;position:relative;}
+.pipeline::before{content:'';position:absolute;left:23px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--purple),transparent);}
+.pipe-step{display:flex;gap:24px;align-items:flex-start;padding:24px 0;}
+.pipe-num{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--purple2));display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px;flex-shrink:0;box-shadow:0 0 20px rgba(128,131,255,0.4);}
+.pipe-content h3{font-size:16px;font-weight:700;margin-bottom:4px;}
+.pipe-content p{font-size:14px;color:var(--muted);line-height:1.6;}
+
+/* FEATURES GRID */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px;transition:border-color 0.2s;}
+.feature-card:hover{border-color:rgba(128,131,255,0.4);}
+.feature-icon{font-size:28px;margin-bottom:16px;}
+.feature-card h3{font-size:16px;font-weight:700;margin-bottom:8px;}
+.feature-card p{font-size:14px;color:var(--muted);line-height:1.6;}
+
+/* TECH STACK */
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+.tech-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;display:flex;align-items:center;gap:12px;}
+.tech-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0;}
+.tech-name{font-size:13px;font-weight:600;}
+.tech-desc{font-size:11px;color:var(--muted);}
+
+/* VERDICT */
+.verdict-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
+.verdict-card{border-radius:12px;padding:24px;text-align:center;border:1px solid;}
+.verdict-card.genuine{background:rgba(74,222,128,0.05);border-color:rgba(74,222,128,0.2);}
+.verdict-card.suspicious{background:rgba(250,204,21,0.05);border-color:rgba(250,204,21,0.2);}
+.verdict-card.fake{background:rgba(248,113,113,0.05);border-color:rgba(248,113,113,0.2);}
+.verdict-emoji{font-size:32px;margin-bottom:8px;}
+.verdict-card h3{font-size:16px;font-weight:800;margin-bottom:4px;}
+.verdict-card p{font-size:13px;color:var(--muted);}
+
+/* CTA */
+.cta-section{background:linear-gradient(135deg,rgba(128,131,255,0.1),rgba(87,27,193,0.1));border:1px solid rgba(128,131,255,0.2);border-radius:20px;padding:80px 48px;text-align:center;margin:0 24px 96px;}
+.cta-section h2{font-size:clamp(28px,4vw,48px);font-weight:900;margin-bottom:16px;}
+.cta-section p{color:var(--muted);font-size:16px;margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:40px;text-align:center;color:var(--muted);font-size:13px;}
+
+@media(max-width:768px){
+  nav{padding:0 20px;}
+  .nav-links{display:none;}
+  .stats{flex-direction:column;}
+  .stat{border-right:none;border-bottom:1px solid var(--border);}
+  .verdict-row{grid-template-columns:1fr;}
+  .cta-section{padding:48px 24px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">🛡️ VeriSphere</div>
+  <div class="nav-links">
+    <a href="#how-it-works">How it works</a>
+    <a href="#features">Features</a>
+    <a href="#tech">Tech Stack</a>
+    <a href="https://github.com/Purvii15/VeriSphere-Aadhaar-fraud-detection-system" target="_blank">GitHub</a>
+    <a href="/" class="nav-cta">Open App →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-badge">🤖 AI-Powered · Real-Time · Multi-Layer</div>
+  <h1>Detect Document Fraud<br/><span>Before It Costs You</span></h1>
+  <p class="hero-sub">VeriSphere runs every uploaded document through five independent AI verification layers — catching forgeries that pass visual inspection in under 2 seconds.</p>
+  <div class="hero-btns">
+    <a href="/" class="btn-primary">Try Live Demo →</a>
+    <a href="https://github.com/Purvii15/VeriSphere-Aadhaar-fraud-detection-system" target="_blank" class="btn-secondary">View on GitHub</a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stat-num">5</div><div class="stat-label">Verification Layers</div></div>
+  <div class="stat"><div class="stat-num">94.8%</div><div class="stat-label">mAP50 Accuracy</div></div>
+  <div class="stat"><div class="stat-num">&lt;2s</div><div class="stat-label">Analysis Time</div></div>
+  <div class="stat"><div class="stat-num">34</div><div class="stat-label">Document Classes</div></div>
+  <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Checksum Coverage</div></div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="section-tag">How It Works</div>
+  <h2 class="section-title">Five layers. One verdict.</h2>
+  <p class="section-sub">Every document passes through all five checks simultaneously. A sophisticated fake might beat one or two — beating all five is exponentially harder.</p>
+
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="pipe-num">1</div>
+      <div class="pipe-content">
+        <h3>YOLOv8 Field Detection</h3>
+        <p>Computer vision model locates and crops every field on the document — name, DOB, ID number, face photo, and QR code — with bounding box annotations.</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">2</div>
+      <div class="pipe-content">
+        <h3>EasyOCR Text Extraction</h3>
+        <p>Neural network reads all visible text from each cropped region with multi-variant preprocessing to handle low-quality, skewed, or compressed scans.</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">3</div>
+      <div class="pipe-content">
+        <h3>Verhoeff Checksum Validation</h3>
+        <p>Mathematically validates the 12-digit Aadhaar number. Catches 100% of fabricated numbers instantly — no database lookup or internet connection required.</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">4</div>
+      <div class="pipe-content">
+        <h3>QR Cross-Verification + Face Matching</h3>
+        <p>Decodes the embedded QR code (old XML and secure binary formats) and compares every field against OCR output. If a photo is embedded, it's matched against the card face using SSIM — catching photo-swap fraud.</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num">5</div>
+      <div class="pipe-content">
+        <h3>Digital Forensics</h3>
+        <p>Error Level Analysis, noise uniformity checks, and sharpness consistency analysis detect pixel-level manipulation, copy-paste forgery, and screenshot-based fakes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VERDICT -->
+<section style="padding-top:0">
+  <div class="section-tag">Output</div>
+  <h2 class="section-title">Clear, explainable verdicts</h2>
+  <div class="verdict-row">
+    <div class="verdict-card genuine">
+      <div class="verdict-emoji">✅</div>
+      <h3 style="color:#4ade80">Genuine</h3>
+      <p>All five layers pass. All cross-checks align. No anomalies detected.</p>
+    </div>
+    <div class="verdict-card suspicious">
+      <div class="verdict-emoji">⚠️</div>
+      <h3 style="color:#facc15">Suspicious</h3>
+      <p>Minor inconsistencies detected. Requires manual review before proceeding.</p>
+    </div>
+    <div class="verdict-card fake">
+      <div class="verdict-emoji">❌</div>
+      <h3 style="color:#f87171">Fake</h3>
+      <p>Critical failures detected — invalid checksum, QR mismatch, or tampering evidence.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-tag">Features</div>
+  <h2 class="section-title">Everything in one platform</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🪪</div>
+      <h3>Multi-Document Support</h3>
+      <p>Aadhaar, PAN, Driving Licence, Passport, Voter ID — 34 document classes detected via SISA YOLO26 classifier trained to 94.8% mAP50.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📷</div>
+      <h3>Live QR Decoder</h3>
+      <p>Paste any raw QR string from a handheld scanner to instantly decode all embedded fields and view the embedded photo.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✨</div>
+      <h3>AI Chat Assistant</h3>
+      <p>Explains every fraud finding in plain language — accessible to bank clerks, HR staff, and government officials without technical training.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔒</div>
+      <h3>No Database Required</h3>
+      <p>Verifies internal document consistency and cryptographic integrity. No UIDAI API, no external lookup — works fully offline.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Real-Time Analysis</h3>
+      <p>Full 5-layer pipeline completes in under 2 seconds — practical for high-volume verification at loan counters, KYC desks, and onboarding flows.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🛡️</div>
+      <h3>Privacy by Design</h3>
+      <p>No document data is stored. Analysis happens in memory and is discarded after the response. No PII leaves the server.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="tech">
+  <div class="section-tag">Tech Stack</div>
+  <h2 class="section-title">Built on battle-tested ML</h2>
+  <div class="tech-grid">
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">YOLO26 (SISA)</div><div class="tech-desc">Document type detection</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">YOLOv8</div><div class="tech-desc">Field localization</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">EasyOCR</div><div class="tech-desc">Text extraction</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">OpenCV</div><div class="tech-desc">ELA forensics</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">scikit-image</div><div class="tech-desc">SSIM face matching</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">zxing-cpp</div><div class="tech-desc">QR decoding</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">Gemini AI</div><div class="tech-desc">Explainability layer</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">Flask + Gunicorn</div><div class="tech-desc">Production web server</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">PyTorch + ResNet</div><div class="tech-desc">Tampering classifier</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">Verhoeff Algorithm</div><div class="tech-desc">Checksum validation</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">Tailwind CSS</div><div class="tech-desc">Dark-theme UI</div></div></div>
+    <div class="tech-item"><div class="tech-dot"></div><div><div class="tech-name">SQLite</div><div class="tech-desc">Analytics persistence</div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <h2>See it in action</h2>
+  <p>Upload any Aadhaar card image and watch all five verification layers run in real time.</p>
+  <a href="/" class="btn-primary">Open VeriSphere →</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div style="font-weight:800;font-size:16px;margin-bottom:8px;">🛡️ VeriSphere</div>
+  <div>AI-Powered Document Fraud Detection · Built for Banking & KYC</div>
+  <div style="margin-top:16px;display:flex;gap:24px;justify-content:center;">
+    <a href="/">App</a>
+    <a href="/qr-decode">QR Decoder</a>
+    <a href="https://github.com/Purvii15/VeriSphere-Aadhaar-fraud-detection-system" target="_blank">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>"""
+
+
+@app.route("/landing")
+@app.route("/about")
+def landing_page():
+    return render_template_string(_LANDING_HTML)
 
 
 if __name__ == "__main__":
